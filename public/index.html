@@ -51,14 +51,18 @@
                 const data = await response.json();
                 loadingDiv.style.display = 'none';
 
-                if (response.ok && data.status === 200 && data.result.url) {
-                    resultDiv.innerHTML = `
-                        <p style="color: green;">Video berhasil diunduh!</p>
-                        <a href="${data.result.url}" class="download-link" target="_blank" download>
-                            <button>Unduh Video Sekarang</button>
-                        </a>
-                    `;
-                } else {
+                // Baris yang sudah diperbaiki
+if (response.ok && data.status === 200 && data.data.urls && data.data.urls.length > 0) {
+    const downloadUrl = data.data.urls[0]; // Ambil URL pertama dari array
+    resultDiv.innerHTML = `
+        <p style="color: green;">Video berhasil diunduh!</p>
+        <a href="${downloadUrl}" class="download-link" target="_blank" download>
+            <button>Unduh Video Sekarang</button>
+        </a>
+    `;
+} else {
+    // ...
+}
                     resultDiv.innerHTML = `<p style="color: red;">${data.message || 'Gagal mengunduh video.'}</p>`;
                 }
 
