@@ -14,35 +14,30 @@
     <meta property="og:type" content="website">
     <link href="https://fonts.cdnfonts.com/css/conthrax" rel="stylesheet">
     <script>
-        // TailwindCSS configuration
-tailwind.config = {
-    darkMode: 'class',
-    theme: {
-        extend: {
-            colors: {
-                'dark-red': {
-                    // Warna merah yang lebih cerah
-                    500: '#D62C2C', 
-                    600: '#C22828',
-                    700: '#AD2424',
-                    800: '#992020',
-                    900: '#851C1C',
-                    '900-dark': '#7A1A1A'
-                },
-                'dark-gray': {
-                    'body': '#1a202c',
-                    'card': '#2d3748',
-                    'text': '#e2e8f0',
-                    'line': '#4a5568'
+        // TailwindCSS configuration with colors from Eberardos AI
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'eb': {
+                            'primary': '#b71c1c',
+                            'primary-hover': '#9e1b1b',
+                            'bg-dark': '#0d0d0d',
+                            'bg-light': '#1a1a1a',
+                            'bg-input': '#2a2a2a',
+                            'text-light': '#f0f0f0',
+                            'text-secondary': '#888',
+                            'border': '#333'
+                        }
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                        'conthrax': ['Conthrax', 'sans-serif'],
+                    }
                 }
-            },
-            fontFamily: {
-                'poppins': ['Poppins', 'sans-serif'],
-                'conthrax': ['Conthrax', 'sans-serif'],
             }
         }
-    }
-}
     </script>
     <style type="text/css">
         html {
@@ -67,37 +62,36 @@ tailwind.config = {
         }
     </style>
 </head>
-<body class="font-poppins bg-gray-50 text-gray-800 transition-colors duration-500 dark:bg-dark-gray-body dark:text-dark-gray-text">
+<body class="font-poppins bg-eb-bg-dark text-eb-text-light transition-colors duration-500">
 
     <main>
-        <section id="downloader-section" class="py-16 bg-white dark:bg-dark-gray-body animated-section is-visible">
-            <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-gray-100 dark:bg-dark-gray-card p-8 rounded-lg shadow-lg border border-gray-200 dark:border-dark-gray-line transition-colors duration-500">
-                <h2 class="text-3xl md:text-4xl font-bold text-dark-red-700 mb-6 font-conthrax transition-colors duration-500 dark:text-dark-red-500">
+        <section id="downloader-section" class="py-16 bg-eb-bg-dark animated-section is-visible">
+            <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-eb-bg-light p-8 rounded-lg shadow-lg border border-eb-border transition-colors duration-500">
+                <h2 class="text-3xl md:text-4xl font-bold text-eb-primary mb-6 font-conthrax transition-colors duration-500">
                     TikTok Downloader
                 </h2>
-                <p class="text-lg text-gray-700 mb-8 transition-colors duration-500 dark:text-dark-gray-text">
+                <p class="text-lg text-eb-text-light mb-8 transition-colors duration-500">
                     Tempel URL video TikTok di sini untuk mengunduh tanpa watermark.
                 </p>
                 <input type="text" id="tiktokUrl" placeholder="Contoh: https://vt.tiktok.com/..." required
-                       class="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-dark-red-500 bg-white dark:bg-dark-gray-body dark:text-dark-gray-text transition-colors duration-500">
+                       class="w-full px-4 py-3 rounded-md border border-eb-border focus:outline-none focus:ring-2 focus:ring-eb-primary bg-eb-bg-input text-eb-text-light transition-colors duration-500">
                 <button id="downloadBtn"
-                        class="w-full mt-4 px-6 py-3 bg-dark-red-600 text-white font-semibold rounded-md hover:bg-dark-red-700 transition-colors duration-300 transform hover:scale-105 dark:bg-dark-red-500 dark:hover:bg-dark-red-600">
+                        class="w-full mt-4 px-6 py-3 bg-eb-primary text-eb-text-light font-semibold rounded-md hover:bg-eb-primary-hover transition-colors duration-300 transform hover:scale-105">
                     Download
                 </button>
-                <div id="loading" class="mt-6 text-dark-red-500 font-medium hidden">Memproses...</div>
+                <div id="loading" class="mt-6 text-eb-primary font-medium hidden">Memproses...</div>
                 <div id="result" class="mt-6"></div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-dark-red-900 text-white py-8 transition-colors duration-500 dark:bg-dark-red-900-dark">
+    <footer class="bg-eb-bg-light text-eb-text-light py-8 transition-colors duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p>© 2021 - 2025 Eberardos Community</p>
         </div>
     </footer>
     
     <script>
-        // Downloader script logic
         document.getElementById('downloadBtn').addEventListener('click', async () => {
             const urlInput = document.getElementById('tiktokUrl');
             const url = urlInput.value.trim();
@@ -139,7 +133,7 @@ tailwind.config = {
                     const description = metadata.description || 'Tidak Ada Deskripsi';
 
                     resultDiv.innerHTML = `
-                        <div class="bg-gray-50 dark:bg-dark-gray-body p-6 rounded-lg shadow-md border border-gray-200 dark:border-dark-gray-line transition-colors duration-500">
+                        <div class="bg-eb-bg-light p-6 rounded-lg shadow-md border border-eb-border transition-colors duration-500">
                             <p class="text-green-500 mb-4 font-semibold">Video berhasil diunduh!</p>
                             <div class="text-center mb-6">
                                 <img src="${thumbnail}" alt="Video Thumbnail" class="w-48 h-auto mx-auto mb-4 rounded-lg shadow-md">
@@ -148,7 +142,7 @@ tailwind.config = {
                                 <p class="text-sm"><strong>Deskripsi:</strong> ${description}</p>
                                 <p class="text-sm"><strong>URL Asli:</strong> <a href="${originalUrl}" target="_blank" class="text-blue-500 hover:underline break-all">${originalUrl}</a></p>
                             </div>
-                            <a href="${downloadUrl}" class="w-full inline-block px-6 py-3 bg-dark-red-600 text-white font-semibold rounded-md hover:bg-dark-red-700 transition-colors duration-300 dark:bg-dark-red-500 dark:hover:bg-dark-red-600">
+                            <a href="${downloadUrl}" class="w-full inline-block px-6 py-3 bg-eb-primary text-eb-text-light font-semibold rounded-md hover:bg-eb-primary-hover transition-colors duration-300">
                                 Unduh Video Sekarang
                             </a>
                         </div>
