@@ -13,8 +13,8 @@ export default async function handler(req, res) {
 
     try {
         const apiUrl = 'https://api.siputzx.my.id/api/d/ytpost';
-        // Mengambil API Key dari environment variable
-        const apiKey = process.env.GIVY_API_KEY;
+        // Mengambil API Key dari environment variable yang benar
+        const apiKey = process.env.API_KEY;
 
         const response = await fetch(apiUrl, {
             method: 'POST',
