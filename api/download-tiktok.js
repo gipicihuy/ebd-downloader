@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 // Ganti dengan API Key Anda yang sebenarnya
-const API_KEY = 'dnzu';
+const API_KEY = 'givy';
 
 // Handler function untuk Vercel Serverless
 module.exports = async (req, res) => {
