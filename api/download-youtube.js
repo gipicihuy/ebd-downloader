@@ -12,26 +12,25 @@ export default async function handler(req, res) {
     }
 
     try {
-        const apiUrl = 'https://api.siputzx.my.id/api/d/ytpost';
-        // Mengambil API Key dari environment variable yang benar
-        const apiKey = process.env.API_KEY;
+        // Buat URL API dengan query string untuk URL video dan resolusi
+        const apiUrl = `https://api.skyzxu.web.id/downloader/ytmp4?url=${encodeURIComponent(url)}&resolution=720`;
 
+        // Lakukan permintaan GET ke API eksternal
         const response = await fetch(apiUrl, {
-            method: 'POST',
+            method: 'GET',
             headers: {
-                'accept': '*/*',
-                'api_key': apiKey,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ url: url })
+                'accept': 'application/json'
+            }
         });
 
         const data = await response.json();
 
         if (!response.ok) {
+            // Jika API eksternal merespons dengan error (misalnya 4xx atau 5xx)
             return res.status(response.status).json(data);
         }
 
+        // Mengirimkan respons dari API eksternal kembali ke frontend
         res.status(200).json(data);
 
     } catch (error) {
