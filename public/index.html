@@ -26,52 +26,49 @@
     </div>
 
     <script>
-        document.getElementById('downloadBtn').addEventListener('click', async () => {
-            const url = document.getElementById('tiktokUrl').value;
-            const resultDiv = document.getElementById('result');
-            const loadingDiv = document.getElementById('loading');
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
+        const url = document.getElementById('tiktokUrl').value;
+        const resultDiv = document.getElementById('result');
+        const loadingDiv = document.getElementById('loading');
 
-            if (!url) {
-                resultDiv.innerHTML = '<p style="color: red;">URL tidak boleh kosong!</p>';
-                return;
+        if (!url) {
+            resultDiv.innerHTML = '<p style="color: red;">URL tidak boleh kosong!</p>';
+            return;
+        }
+        
+        loadingDiv.style.display = 'block';
+        resultDiv.innerHTML = '';
+
+        try {
+            const response = await fetch('/api/download-tiktok', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url })
+            });
+
+            const data = await response.json();
+            loadingDiv.style.display = 'none';
+
+            if (response.ok && data.status === 200 && data.data.urls && data.data.urls.length > 0) {
+                const downloadUrl = data.data.urls[0];
+                resultDiv.innerHTML = `
+                    <p style="color: green;">Video berhasil diunduh!</p>
+                    <a href="${downloadUrl}" class="download-link" target="_blank" download>
+                        <button>Unduh Video Sekarang</button>
+                    </a>
+                `;
+            } else {
+                resultDiv.innerHTML = `<p style="color: red;">${data.message || 'Gagal mengunduh video. Coba URL lain.'}</p>`;
             }
-            
-            loadingDiv.style.display = 'block';
-            resultDiv.innerHTML = '';
 
-            try {
-                const response = await fetch('/api/download-tiktok', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ url })
-                });
-
-                const data = await response.json();
-                loadingDiv.style.display = 'none';
-
-                // Baris yang sudah diperbaiki
-if (response.ok && data.status === 200 && data.data.urls && data.data.urls.length > 0) {
-    const downloadUrl = data.data.urls[0]; // Ambil URL pertama dari array
-    resultDiv.innerHTML = `
-        <p style="color: green;">Video berhasil diunduh!</p>
-        <a href="${downloadUrl}" class="download-link" target="_blank" download>
-            <button>Unduh Video Sekarang</button>
-        </a>
-    `;
-} else {
-    // ...
-}
-                    resultDiv.innerHTML = `<p style="color: red;">${data.message || 'Gagal mengunduh video.'}</p>`;
-                }
-
-            } catch (error) {
-                loadingDiv.style.display = 'none';
-                console.error('Error:', error);
-                resultDiv.innerHTML = '<p style="color: red;">Terjadi kesalahan. Pastikan URL valid dan coba lagi.</p>';
-            }
-        });
-    </script>
+        } catch (error) {
+            loadingDiv.style.display = 'none';
+            console.error('Error:', error);
+            resultDiv.innerHTML = '<p style="color: red;">Terjadi kesalahan. Pastikan URL valid dan coba lagi.</p>';
+        }
+    });
+</script>
 </body>
 </html>
