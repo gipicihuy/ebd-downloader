@@ -171,7 +171,8 @@
                     const downloadUrl = data.data.urls[0];
                     const metadata = data.data.metadata;
                     const originalUrl = data.data.original_url || '#';
-                    const thumbnail = metadata.thumbnail || 'https://via.placeholder.com/200';
+                    // Menggunakan placeholder jika thumbnail tidak ada
+                    const thumbnail = metadata.thumbnail || 'https://via.placeholder.com/200/2a2a2a/f0f0f0?text=No+Image';
                     const title = metadata.title || 'Tidak Ada Judul';
                     const creator = metadata.creator || 'Tidak Diketahui';
                     const description = metadata.description || 'Tidak Ada Deskripsi';
