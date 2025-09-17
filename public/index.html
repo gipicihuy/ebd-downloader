@@ -60,10 +60,11 @@
                 if (data.status === true && data.data && data.data.urls && data.data.urls.length > 0) {
                     const downloadUrl = data.data.urls[0];
                     const metadata = data.data.metadata;
-                    // Menggunakan operator OR (||) untuk memberikan nilai default
+                    const originalUrl = data.data.original_url || 'Tidak Tersedia';
                     const thumbnail = metadata.thumbnail || 'https://via.placeholder.com/200';
                     const title = metadata.title || 'Tidak Ada Judul';
                     const creator = metadata.creator || 'Tidak Diketahui';
+                    const description = metadata.description || 'Tidak Ada Deskripsi';
 
                     resultDiv.innerHTML = `
                         <p style="color: green;">Video berhasil diunduh!</p>
@@ -71,6 +72,8 @@
                             <img src="${thumbnail}" alt="Video Thumbnail" style="width: 200px; border-radius: 8px;">
                             <p style="margin-top: 10px;"><strong>Judul:</strong> ${title}</p>
                             <p><strong>Dibuat oleh:</strong> ${creator}</p>
+                            <p><strong>Deskripsi:</strong> ${description}</p>
+                            <p><strong>URL Asli:</strong> <a href="${originalUrl}" target="_blank">${originalUrl}</a></p>
                         </div>
                         <a href="${downloadUrl}" class="download-link" target="_blank" download>
                             <button>Unduh Video Sekarang</button>
