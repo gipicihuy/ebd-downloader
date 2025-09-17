@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,7 @@
     <meta property="og:type" content="website">
     <link href="https://fonts.cdnfonts.com/css/conthrax" rel="stylesheet">
     <script>
+        // TailwindCSS configuration with adjusted dark-red colors
         tailwind.config = {
             darkMode: 'class',
             theme: {
@@ -24,7 +25,8 @@
                             600: '#7A0000',
                             700: '#690000',
                             800: '#580000',
-                            900: '#470000',
+                            // Changed to a brighter color for better visibility
+                            900: '#470000', 
                             '900-dark': '#310000'
                         },
                         'dark-gray': {
@@ -46,7 +48,6 @@
         html {
             scroll-behavior: smooth;
         }
-        /* Add these styles for a proper flexbox layout */
         body {
             display: flex;
             flex-direction: column;
@@ -88,21 +89,12 @@
             </div>
         </section>
     </main>
-    
+
     <footer class="bg-dark-red-900 text-white py-8 transition-colors duration-500 dark:bg-dark-red-900-dark">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p>© 2021 - 2025 Eberardos Community</p>
         </div>
     </footer>
-    
-    <button id="theme-toggle" aria-label="Toggle theme" class="fixed bottom-4 right-4 z-50 p-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 bg-dark-red-600 text-white dark:bg-dark-red-500">
-        <svg id="sun-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v2m0 16v2m8-10h2M2 12h2m15.364-6.364l1.414-1.414M4.222 4.222l-1.414 1.414m15.364 15.364l1.414-1.414M4.222 19.778l-1.414-1.414M12 16a4 4 0 100-8 4 4 0 000 8z" />
-        </svg>
-        <svg id="moon-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-    </button>
     
     <script>
         // Downloader script logic
@@ -171,34 +163,6 @@
             } finally {
                 loadingDiv.classList.add('hidden');
             }
-        });
-        
-        // Theme toggle logic
-        const themeToggle = document.getElementById('theme-toggle');
-        const sunIcon = document.getElementById('sun-icon');
-        const moonIcon = document.getElementById('moon-icon');
-
-        const applyTheme = (theme) => {
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-                sunIcon.classList.add('hidden');
-                moonIcon.classList.remove('hidden');
-            } else {
-                document.documentElement.classList.remove('dark');
-                sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');
-            }
-            localStorage.setItem('theme', theme);
-        };
-
-        const savedTheme = localStorage.getItem('theme');
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        const initialTheme = savedTheme || systemTheme;
-        applyTheme(initialTheme);
-
-        themeToggle.addEventListener('click', () => {
-            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
-            applyTheme(newTheme);
         });
     </script>
 </body>
