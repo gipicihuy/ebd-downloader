@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eberardos TikTok Downloader</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f0f2f5; }
+        .container { background: white; padding: 2em; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        input[type="text"] { width: 300px; padding: 10px; margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 20px; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #loading { display: none; margin-top: 1em; }
+        #result { margin-top: 1em; }
+        .download-link { text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Eberardos TikTok Downloader</h1>
+        <p>Tempel URL video TikTok di sini:</p>
+        <input type="text" id="tiktokUrl" placeholder="Contoh: https://vt.tiktok.com/..." required>
+        <button id="downloadBtn">Download</button>
+        <div id="loading">Memproses...</div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', async () => {
+            const url = document.getElementById('tiktokUrl').value;
+            const resultDiv = document.getElementById('result');
+            const loadingDiv = document.getElementById('loading');
+
+            if (!url) {
+                resultDiv.innerHTML = '<p style="color: red;">URL tidak boleh kosong!</p>';
+                return;
+            }
+            
+            loadingDiv.style.display = 'block';
+            resultDiv.innerHTML = '';
+
+            try {
+                const response = await fetch('/api/download-tiktok', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url })
+                });
+
+                const data = await response.json();
+                loadingDiv.style.display = 'none';
+
+                if (response.ok && data.status === 200 && data.result.url) {
+                    resultDiv.innerHTML = `
+                        <p style="color: green;">Video berhasil diunduh!</p>
+                        <a href="${data.result.url}" class="download-link" target="_blank" download>
+                            <button>Unduh Video Sekarang</button>
+                        </a>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p style="color: red;">${data.message || 'Gagal mengunduh video.'}</p>`;
+                }
+
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                console.error('Error:', error);
+                resultDiv.innerHTML = '<p style="color: red;">Terjadi kesalahan. Pastikan URL valid dan coba lagi.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
