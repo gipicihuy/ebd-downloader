@@ -12,10 +12,10 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Endpoint yang benar adalah /downloader/ytmp4
         const apiUrl = `https://api.skyzxu.web.id/downloader/ytmp4?url=${encodeURIComponent(url)}&resolution=720`;
-        
-        // Lakukan permintaan GET ke API eksternal tanpa header api_key
+
+        console.log(`[DEBUG] Mengirim permintaan ke: ${apiUrl}`);
+
         const response = await fetch(apiUrl, {
             method: 'GET',
             headers: {
@@ -23,7 +23,14 @@ export default async function handler(req, res) {
             }
         });
 
-        const data = await response.json();
+        // Cetak status dan data respons mentah dari API eksternal
+        const data = await response.json().catch(e => {
+            console.error('[DEBUG] Gagal parsing JSON dari API:', e);
+            return { error: 'Invalid JSON response from external API' };
+        });
+
+        console.log(`[DEBUG] Status respons: ${response.status}`);
+        console.log('[DEBUG] Data respons:', data);
 
         if (!response.ok) {
             return res.status(response.status).json(data);
@@ -32,7 +39,7 @@ export default async function handler(req, res) {
         res.status(200).json(data);
 
     } catch (error) {
-        console.error('Error fetching data from external API:', error);
+        console.error('[DEBUG] Kesalahan dalam proses fetch:', error);
         res.status(500).json({ error: 'Failed to fetch data from external API' });
     }
 }
