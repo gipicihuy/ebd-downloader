@@ -12,7 +12,8 @@ export default async function handler(req, res) {
     }
 
     try {
-        const apiUrl = `https://api.skyzxu.web.id/downloader/ytmp4?url=${encodeURIComponent(url)}&resolution=720`;
+        // Menggunakan API baru yang Anda berikan
+        const apiUrl = `https://api-downloader.zone.id/api/donlotyete?url=${encodeURIComponent(url)}`;
         
         const response = await fetch(apiUrl, {
             method: 'GET',
