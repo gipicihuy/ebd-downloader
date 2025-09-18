@@ -26,31 +26,34 @@ export default async function handler(req, res) {
 
         const data = await response.json();
 
-        if (!response.ok) {
+        if (!response.ok || data.status !== true) {
             return res.status(response.status).json(data);
         }
 
-        if (data.status === true && data.result && data.result.video_url) {
+        const downloadUrl = data.data?.urls?.[0];
+
+        if (downloadUrl) {
+            const metadata = data.data.metadata;
             const result = {
                 status: true,
                 data: {
-                    urls: [data.result.video_url],
+                    urls: [downloadUrl],
                     metadata: {
-                        title: data.result.title || 'Tidak Ada Judul',
-                        creator: data.result.author_info.nickname || 'Tidak Diketahui',
-                        thumbnail: data.result.cover_url || 'https://via.placeholder.com/200/2a2a2a/f0f0f0?text=No+Image',
-                        description: data.result.desc || 'Tidak Ada Deskripsi'
+                        title: metadata.title || 'Tidak Ada Judul',
+                        creator: metadata.creator || 'Tidak Diketahui',
+                        thumbnail: metadata.thumbnail || 'https://via.placeholder.com/200/2a2a2a/f0f0f0?text=No+Image',
+                        description: metadata.description || 'Tidak Ada Deskripsi'
                     },
                     original_url: url
                 }
             };
             res.status(200).json(result);
         } else {
-            res.status(404).json({ error: 'Tautan unduhan video tidak ditemukan.' });
+            res.status(404).json({ error: 'Tautan unduhan video tidak ditemukan. Coba URL lain.' });
         }
 
     } catch (error) {
         console.error('Error contacting TikTok API:', error);
-        res.status(500).json({ error: 'Gagal mengunduh video. Silakan coba URL lain.' });
+        res.status(500).json({ error: 'Gagal mengunduh video. Silakan coba lagi.' });
     }
 }
