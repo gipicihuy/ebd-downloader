@@ -12,8 +12,8 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Menggunakan API baru yang Anda berikan
-        const apiUrl = `https://api-downloader.zone.id/api/donlotyete?url=${encodeURIComponent(url)}`;
+        // Menggunakan API baru dengan parameter type dan quality yang sudah ditentukan
+        const apiUrl = `https://api-downloader.zone.id/api/donlotyete?url=${encodeURIComponent(url)}&type=mp4&quality=720p`;
         
         const response = await fetch(apiUrl, {
             method: 'GET',
