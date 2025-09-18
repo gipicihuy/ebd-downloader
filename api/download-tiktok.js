@@ -1,3 +1,5 @@
+import fetch from 'node-fetch';
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method Not Allowed' });
@@ -34,6 +36,16 @@ export default async function handler(req, res) {
 
         if (downloadUrl) {
             const metadata = data.data.metadata;
+            let thumbnailURL = metadata.thumbnail;
+
+            // Jika thumbnail ada, gunakan proxy API untuk mengambilnya
+            if (thumbnailURL) {
+                thumbnailURL = `/api/get-image?url=${encodeURIComponent(thumbnailURL)}`;
+            } else {
+                // Fallback jika tidak ada thumbnail
+                thumbnailURL = 'https://via.placeholder.com/200/2a2a2a/f0f0f0?text=No+Image';
+            }
+
             const result = {
                 status: true,
                 data: {
@@ -41,7 +53,7 @@ export default async function handler(req, res) {
                     metadata: {
                         title: metadata.title || 'Tidak Ada Judul',
                         creator: metadata.creator || 'Tidak Diketahui',
-                        thumbnail: metadata.thumbnail || 'https://via.placeholder.com/200/2a2a2a/f0f0f0?text=No+Image',
+                        thumbnail: thumbnailURL,
                         description: metadata.description || 'Tidak Ada Deskripsi'
                     },
                     original_url: url
