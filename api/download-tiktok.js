@@ -1,18 +1,11 @@
-const axios = require('axios');
-
-// Ambil API_KEY dari environment variables Vercel
-const API_KEY = process.env.API_KEY;
-
-// Handler function untuk Vercel Serverless
-module.exports = async (req, res) => {
-    // Memastikan metode permintaannya adalah POST
+export default async function handler(req, res) {
     if (req.method !== 'POST') {
-        return res.status(405).send('Method Not Allowed');
+        return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
     const { url } = req.body;
+    const API_KEY = process.env.API_KEY;
 
-    // Pastikan API Key dan URL tidak kosong
     if (!API_KEY) {
         return res.status(500).json({ error: 'API Key is missing.' });
     }
@@ -21,18 +14,43 @@ module.exports = async (req, res) => {
     }
 
     try {
-        const apiResponse = await axios.post('https://api.siputzx.my.id/api/d/tiktok', { url }, {
+        const response = await fetch('https://api.siputzx.my.id/api/d/tiktok', {
+            method: 'POST',
             headers: {
                 'accept': '*/*',
                 'Content-Type': 'application/json',
-                'api_key': API_KEY // Gunakan variabel lingkungan
-            }
+                'api_key': API_KEY
+            },
+            body: JSON.stringify({ url })
         });
-        
-        // Meneruskan respons dari API ke frontend
-        res.json(apiResponse.data);
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return res.status(response.status).json(data);
+        }
+
+        if (data.status === true && data.result && data.result.video_url) {
+            const result = {
+                status: true,
+                data: {
+                    urls: [data.result.video_url],
+                    metadata: {
+                        title: data.result.title || 'Tidak Ada Judul',
+                        creator: data.result.author_info.nickname || 'Tidak Diketahui',
+                        thumbnail: data.result.cover_url || 'https://via.placeholder.com/200/2a2a2a/f0f0f0?text=No+Image',
+                        description: data.result.desc || 'Tidak Ada Deskripsi'
+                    },
+                    original_url: url
+                }
+            };
+            res.status(200).json(result);
+        } else {
+            res.status(404).json({ error: 'Tautan unduhan video tidak ditemukan.' });
+        }
+
     } catch (error) {
-        console.error('Error contacting TikTok API:', error.response ? error.response.data : error.message);
-        res.status(500).json({ error: 'Failed to download video. Please try another URL.' });
+        console.error('Error contacting TikTok API:', error);
+        res.status(500).json({ error: 'Gagal mengunduh video. Silakan coba URL lain.' });
     }
-};
+}
