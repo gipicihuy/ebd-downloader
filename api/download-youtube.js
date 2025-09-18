@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const apiUrl = `https://api.skyzxu.web.id/downloader/ytmp4?url=${encodeURIComponent(url)}&resolution=360`;
+        const apiUrl = `https://api-downloader.zone.id/api/ytmp4?url=${encodeURIComponent(url)}&quality=highest`;
         
         const response = await fetch(apiUrl, {
             method: 'GET',
@@ -21,20 +21,21 @@ export default async function handler(req, res) {
 
         const data = await response.json();
 
-        if (!response.ok) {
-            return res.status(response.status).json(data);
+        // Periksa apakah API berhasil merespons
+        if (data.status !== 200 || !data.success) {
+            return res.status(data.status || 500).json({ error: data.message || 'Gagal mengambil data dari API.' });
         }
 
-        // Memeriksa keberadaan data yang diperlukan
-        if (data.download_url) {
+        // Periksa apakah URL unduhan tersedia
+        if (data.url) {
             const result = {
                 status: true,
                 data: {
-                    urls: [data.download_url],
+                    urls: [data.url],
                     metadata: {
                         title: data.title || 'Tidak Ada Judul',
-                        creator: data.uploader || 'Tidak Diketahui',
-                        thumbnail: data.thumbnail || 'https://via.placeholder.com/200/2a2a2a/f0f0f0?text=No+Image',
+                        creator: data.channel || 'Tidak Diketahui',
+                        thumbnail: data.thumb || 'https://via.placeholder.com/200/2a2a2a/f0f0f0?text=No+Image',
                         description: data.description || 'Tidak Ada Deskripsi'
                     },
                     original_url: url
@@ -42,11 +43,11 @@ export default async function handler(req, res) {
             };
             res.status(200).json(result);
         } else {
-            res.status(404).json({ error: 'Tautan unduhan tidak ditemukan dalam respons.' });
+            res.status(404).json({ error: 'Tautan unduhan tidak ditemukan. Coba URL lain atau tunggu sebentar.' });
         }
 
     } catch (error) {
-        console.error('Error fetching data from external API:', error);
-        res.status(500).json({ error: 'Gagal mengambil data dari API eksternal. Kemungkinan API tidak stabil.' });
+        console.error('Error fetching data from API:', error);
+        res.status(500).json({ error: 'Gagal mengambil data dari API eksternal. Periksa koneksi atau URL.' });
     }
 }
