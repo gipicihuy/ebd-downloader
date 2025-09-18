@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     const { url } = req.body;
 
     if (!url) {
-        return res.status(400).json({ error: 'Missing URL parameter' });
+        return res.status(400).json({ error: 'URL is required.' });
     }
 
     try {
@@ -21,12 +21,10 @@ export default async function handler(req, res) {
 
         const data = await response.json();
 
-        // Periksa apakah API berhasil merespons
         if (data.status !== 200 || !data.success) {
             return res.status(data.status || 500).json({ error: data.message || 'Gagal mengambil data dari API.' });
         }
 
-        // Periksa apakah URL unduhan tersedia
         if (data.url) {
             const result = {
                 status: true,
