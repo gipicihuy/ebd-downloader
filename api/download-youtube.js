@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Menggunakan API baru dengan parameter type dan quality yang sudah ditentukan
+        // API ini membutuhkan parameter type dan quality
         const apiUrl = `https://api-downloader.zone.id/api/donlotyete?url=${encodeURIComponent(url)}&type=mp4&quality=720p`;
         
         const response = await fetch(apiUrl, {
@@ -25,9 +25,11 @@ export default async function handler(req, res) {
         const data = await response.json();
 
         if (!response.ok) {
+            // Jika API mengembalikan error, kirimkan error tersebut
             return res.status(response.status).json(data);
         }
 
+        // Jika berhasil, kirimkan data ke frontend
         res.status(200).json(data);
 
     } catch (error) {
