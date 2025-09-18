@@ -12,8 +12,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Buat URL API dengan query string untuk URL video
-        // Perhatikan bahwa di sini kita tidak menyertakan API key karena API ini tidak membutuhkannya
+        // Endpoint yang benar adalah /downloader/ytmp4
         const apiUrl = `https://api.skyzxu.web.id/downloader/ytmp4?url=${encodeURIComponent(url)}&resolution=720`;
         
         // Lakukan permintaan GET ke API eksternal tanpa header api_key
@@ -27,11 +26,9 @@ export default async function handler(req, res) {
         const data = await response.json();
 
         if (!response.ok) {
-            // Jika API eksternal merespons dengan error (misalnya 4xx atau 5xx)
             return res.status(response.status).json(data);
         }
 
-        // Mengirimkan respons dari API eksternal kembali ke frontend
         res.status(200).json(data);
 
     } catch (error) {
