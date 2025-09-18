@@ -244,9 +244,10 @@
                     const creator = metadata.creator || 'Tidak Diketahui';
                     const description = metadata.description || 'Tidak Ada Deskripsi';
 
+                    // Memperbarui hasil dan mengaktifkan unduhan otomatis
                     resultDiv.innerHTML = `
                         <div class="bg-eb-bg-light p-6 rounded-lg shadow-md border border-eb-border transition-colors duration-500 mt-4">
-                            <p class="text-green-500 mb-4 font-semibold">Video berhasil diunduh!</p>
+                            <p class="text-green-500 mb-4 font-semibold">Video berhasil ditemukan!</p>
                             <div class="text-center mb-6">
                                 <img src="${thumbnail}" alt="Video Thumbnail" class="w-48 h-auto mx-auto mb-4 rounded-lg shadow-md">
                                 <p class="text-sm"><strong>Judul:</strong> ${title}</p>
@@ -259,6 +260,19 @@
                             </a>
                         </div>
                     `;
+
+                    // Logic untuk memaksa unduhan saat tombol diklik
+                    const downloadLink = document.querySelector('#youtubeResult a');
+                    downloadLink.addEventListener('click', (event) => {
+                        event.preventDefault(); // Mencegah navigasi bawaan
+                        const link = document.createElement('a');
+                        link.href = downloadUrl;
+                        link.download = `YouTube_${title.replace(/[^a-zA-Z0-9]/g, '_')}.mp4`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    });
+
                 } else {
                     resultDiv.innerHTML = `<p class="text-red-500">${data.message || data.error || 'Gagal mengunduh video. Coba URL lain.'}</p>`;
                 }
