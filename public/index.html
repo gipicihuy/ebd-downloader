@@ -45,7 +45,7 @@
         body {
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            min-height: 10vh;
         }
         main {
             flex-grow: 1;
@@ -69,7 +69,7 @@
         </h1>
     </header>
 
-    <main class="grid lg:grid-cols-3 gap-8 px-4 py-8 max-w-7xl mx-auto">
+    <main class="grid lg:grid-cols-1 gap-8 px-4 py-8 max-w-7xl mx-auto">
         <section id="tiktok-downloader-section" class="animated-section is-visible">
             <div class="text-center bg-eb-bg-light p-8 rounded-lg shadow-lg border border-eb-border transition-colors duration-500">
                 <h2 class="text-2xl md:text-3xl font-bold text-eb-primary mb-6 font-conthrax">
@@ -86,44 +86,6 @@
                 </button>
                 <div id="tiktokLoading" class="mt-6 text-eb-primary font-medium hidden">Memproses...</div>
                 <div id="tiktokResult" class="mt-6"></div>
-            </div>
-        </section>
-
-        <section id="youtube-downloader-section" class="animated-section is-visible">
-            <div class="text-center bg-eb-bg-light p-8 rounded-lg shadow-lg border border-eb-border transition-colors duration-500">
-                <h2 class="text-2xl md:text-3xl font-bold text-eb-primary mb-6 font-conthrax">
-                    YouTube Downloader
-                </h2>
-                <p class="text-lg text-eb-text-light mb-8">
-                    Tempel URL video YouTube di sini:
-                </p>
-                <input type="text" id="youtubeUrl" placeholder="Contoh: https://www.youtube.com/watch?v=..." required
-                       class="w-full px-4 py-3 rounded-md border border-eb-border focus:outline-none focus:ring-2 focus:ring-eb-primary bg-eb-bg-input text-eb-text-light transition-colors duration-500">
-                <button id="youtubeDownloadBtn"
-                        class="w-full mt-4 px-6 py-3 bg-eb-primary text-eb-text-light font-semibold rounded-md hover:bg-eb-primary-hover transition-colors duration-300 transform hover:scale-105">
-                    Download
-                </button>
-                <div id="youtubeLoading" class="mt-6 text-eb-primary font-medium hidden">Memproses...</div>
-                <div id="youtubeResult" class="mt-6"></div>
-            </div>
-        </section>
-
-        <section id="instagram-downloader-section" class="animated-section is-visible">
-            <div class="text-center bg-eb-bg-light p-8 rounded-lg shadow-lg border border-eb-border transition-colors duration-500">
-                <h2 class="text-2xl md:text-3xl font-bold text-eb-primary mb-6 font-conthrax">
-                    Instagram Downloader
-                </h2>
-                <p class="text-lg text-eb-text-light mb-8">
-                    Tempel URL reel/video Instagram di sini:
-                </p>
-                <input type="text" id="instagramUrl" placeholder="Contoh: https://www.instagram.com/reel/..." required
-                       class="w-full px-4 py-3 rounded-md border border-eb-border focus:outline-none focus:ring-2 focus:ring-eb-primary bg-eb-bg-input text-eb-text-light transition-colors duration-500">
-                <button id="instagramDownloadBtn"
-                        class="w-full mt-4 px-6 py-3 bg-eb-primary text-eb-text-light font-semibold rounded-md hover:bg-eb-primary-hover transition-colors duration-300 transform hover:scale-105">
-                    Download
-                </button>
-                <div id="instagramLoading" class="mt-6 text-eb-primary font-medium hidden">Memproses...</div>
-                <div id="instagramResult" class="mt-6"></div>
             </div>
         </section>
     </main>
@@ -201,93 +163,6 @@
             } finally {
                 loadingDiv.classList.add('hidden');
             }
-        });
-
-        // YouTube Downloader Logic
-        document.getElementById('youtubeDownloadBtn').addEventListener('click', async () => {
-    const urlInput = document.getElementById('youtubeUrl');
-    const url = urlInput.value.trim();
-    const resultDiv = document.getElementById('youtubeResult');
-    const loadingDiv = document.getElementById('youtubeLoading');
-
-    if (!url) {
-        resultDiv.innerHTML = '<p class="text-red-500">URL tidak boleh kosong!</p>';
-        return;
-    }
-
-    loadingDiv.classList.remove('hidden');
-    resultDiv.innerHTML = '';
-    
-    try {
-        const response = await fetch('/api/download-youtube', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ url })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            resultDiv.innerHTML = `<p class="text-red-500">Kesalahan server: ${errorData.error || response.statusText}</p>`;
-            return;
-        }
-
-        const data = await response.json();
-        
-        if (data.status === true && data.data && data.data.urls && data.data.urls.length > 0) {
-            const downloadUrl = data.data.urls[0];
-            const metadata = data.data.metadata;
-            const originalUrl = data.data.original_url || '#';
-            const thumbnail = metadata.thumbnail || 'https://via.placeholder.com/200/2a2a2a/f0f0f0?text=No+Image';
-            const title = metadata.title || 'Tidak Ada Judul';
-            const creator = metadata.creator || 'Tidak Diketahui';
-            const description = metadata.description || 'Tidak Ada Deskripsi';
-
-            // Memperbarui hasil
-            resultDiv.innerHTML = `
-                <div class="bg-eb-bg-light p-6 rounded-lg shadow-md border border-eb-border transition-colors duration-500 mt-4">
-                    <p class="text-green-500 mb-4 font-semibold">Video berhasil ditemukan!</p>
-                    <div class="text-center mb-6">
-                        <img src="${thumbnail}" alt="Video Thumbnail" class="w-48 h-auto mx-auto mb-4 rounded-lg shadow-md">
-                        <p class="text-sm"><strong>Judul:</strong> ${title}</p>
-                        <p class="text-sm"><strong>Dibuat oleh:</strong> ${creator}</p>
-                        <p class="text-sm"><strong>Deskripsi:</strong> ${description}</p>
-                        <p class="text-sm"><strong>URL Asli:</strong> <a href="${originalUrl}" target="_blank" class="text-blue-500 hover:underline break-all">${originalUrl}</a></p>
-                    </div>
-                    <a href="#" class="w-full inline-block px-6 py-3 bg-eb-primary text-eb-text-light font-semibold rounded-md hover:bg-eb-primary-hover transition-colors duration-300 download-link">
-                        Unduh Video Sekarang
-                    </a>
-                </div>
-            `;
-
-            // Logic untuk memaksa unduhan saat tombol diklik
-            const downloadLink = resultDiv.querySelector('.download-link');
-            downloadLink.addEventListener('click', (event) => {
-                event.preventDefault(); 
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = `YouTube_${title.replace(/[^a-zA-Z0-9]/g, '_')}.mp4`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
-
-        } else {
-            resultDiv.innerHTML = `<p class="text-red-500">${data.message || data.error || 'Gagal mengunduh video. Coba URL lain.'}</p>`;
-        }
-
-    } catch (error) {
-        console.error("Fetch error:", error);
-        resultDiv.innerHTML = '<p class="text-red-500">Terjadi kesalahan tak terduga. Periksa koneksi internet Anda.</p>';
-    } finally {
-        loadingDiv.classList.add('hidden');
-    }
-});
-        // Instagram Downloader Logic (Placeholder)
-        document.getElementById('instagramDownloadBtn').addEventListener('click', async () => {
-            const resultDiv = document.getElementById('instagramResult');
-            resultDiv.innerHTML = '<p class="text-yellow-500">⚠️ Fungsi ini belum didukung. Silakan coba lagi nanti.</p>';
         });
     </script>
 </body>
